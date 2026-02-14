@@ -101,9 +101,7 @@ fn convert_template_fields(body: &[GitHubTemplateField]) -> Vec<FieldDefinition>
                     .as_ref()
                     .and_then(|v| v.required)
                     .unwrap_or(false),
-                options: attrs
-                    .and_then(|a| a.options.clone())
-                    .unwrap_or_default(),
+                options: attrs.and_then(|a| a.options.clone()).unwrap_or_default(),
                 default: attrs.and_then(|a| a.value.clone()),
             })
         })

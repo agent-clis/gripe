@@ -64,8 +64,7 @@ pub fn run(
             });
             println!(
                 "{}",
-                serde_json::to_string_pretty(&output)
-                    .map_err(|e| format!("JSON error: {}", e))?
+                serde_json::to_string_pretty(&output).map_err(|e| format!("JSON error: {}", e))?
             );
         } else {
             println!("{}", "--- Dry Run ---".yellow().bold());
@@ -107,15 +106,10 @@ pub fn run(
         });
         println!(
             "{}",
-            serde_json::to_string_pretty(&output)
-                .map_err(|e| format!("JSON error: {}", e))?
+            serde_json::to_string_pretty(&output).map_err(|e| format!("JSON error: {}", e))?
         );
     } else {
-        println!(
-            "{} Issue created: {}",
-            "✓".green(),
-            result.url.underline()
-        );
+        println!("{} Issue created: {}", "✓".green(), result.url.underline());
     }
 
     Ok(())
@@ -153,12 +147,7 @@ fn validate_fields(schema: &GripeSchema, values: &HashMap<String, String>) -> Re
         .fields
         .iter()
         .filter(|f| f.required)
-        .filter(|f| {
-            values
-                .get(&f.id)
-                .map(|v| v.is_empty())
-                .unwrap_or(true)
-        })
+        .filter(|f| values.get(&f.id).map(|v| v.is_empty()).unwrap_or(true))
         .map(|f| f.display_label())
         .collect();
 
@@ -197,8 +186,7 @@ fn interactive_prompt(schema: &GripeSchema) -> Result<HashMap<String, String>, S
                 field.options[selection].clone()
             }
             _ => {
-                let mut prompt = Input::<String>::new()
-                    .with_prompt(&label);
+                let mut prompt = Input::<String>::new().with_prompt(&label);
 
                 if let Some(ref def) = field.default {
                     prompt = prompt.default(def.clone());

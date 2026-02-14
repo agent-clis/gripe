@@ -42,7 +42,8 @@ pub fn check_robots(repo: &str) -> Result<AutomatedPolicy, String> {
 
     // GitHub API returns base64-encoded content (with possible newlines)
     let cleaned: String = encoded.chars().filter(|c| !c.is_whitespace()).collect();
-    let decoded = base64_decode(&cleaned).map_err(|e| format!("Failed to decode content: {}", e))?;
+    let decoded =
+        base64_decode(&cleaned).map_err(|e| format!("Failed to decode content: {}", e))?;
 
     match serde_yaml::from_str::<serde_yaml::Value>(&decoded) {
         Ok(val) => {
@@ -59,8 +60,7 @@ pub fn check_robots(repo: &str) -> Result<AutomatedPolicy, String> {
 
 /// Simple base64 decoder (avoids adding a dependency for this one use)
 fn base64_decode(input: &str) -> Result<String, String> {
-    const TABLE: &[u8; 64] =
-        b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+    const TABLE: &[u8; 64] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
     fn val(c: u8) -> Result<u8, String> {
         if let Some(pos) = TABLE.iter().position(|&b| b == c) {
@@ -112,7 +112,8 @@ pub fn create_issue(
                 "warning:".yellow(),
                 labels
             );
-            try_create_issue(repo, title, body, &[])?.map_err(|e| format!("gh issue create failed: {}", e))
+            try_create_issue(repo, title, body, &[])?
+                .map_err(|e| format!("gh issue create failed: {}", e))
         }
         Err(stderr) => Err(format!("gh issue create failed: {}", stderr)),
     }

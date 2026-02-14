@@ -1,4 +1,4 @@
-use crate::types::{FieldDefinition, FieldType, GripeSchema, AutomatedPolicy};
+use crate::types::{AutomatedPolicy, FieldDefinition, FieldType, GripeSchema};
 
 pub fn default_schema() -> GripeSchema {
     GripeSchema {
