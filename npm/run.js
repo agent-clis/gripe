@@ -1,0 +1,15 @@
+#!/usr/bin/env node
+"use strict";
+
+const path = require("path");
+const { execFileSync } = require("child_process");
+
+const ext = process.platform === "win32" ? ".exe" : "";
+const bin = path.join(__dirname, "bin", `gripe${ext}`);
+
+try {
+  execFileSync(bin, process.argv.slice(2), { stdio: "inherit" });
+} catch (err) {
+  if (err.status !== undefined) process.exit(err.status);
+  throw err;
+}

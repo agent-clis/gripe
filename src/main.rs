@@ -11,7 +11,7 @@ use clap::{Parser, Subcommand};
 use colored::Colorize;
 
 #[derive(Parser)]
-#[command(name = "gripe", about = "Submit structured feedback as GitHub issues")]
+#[command(name = "gripe", version, about = "Submit structured feedback as GitHub issues")]
 struct Cli {
     #[command(subcommand)]
     command: Commands,

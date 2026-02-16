@@ -84,3 +84,61 @@ jobs:
           files: |
             *.tar.gz
             *.zip
+
+  homebrew:
+    needs: release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          merge-multiple: true
+          path: artifacts
+
+      - name: Generate Homebrew formula
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          SHA_DARWIN_AMD64=$(sha256sum artifacts/gripe-darwin-amd64.tar.gz | cut -d' ' -f1)
+          SHA_DARWIN_ARM64=$(sha256sum artifacts/gripe-darwin-arm64.tar.gz | cut -d' ' -f1)
+          SHA_LINUX_AMD64=$(sha256sum artifacts/gripe-linux-amd64.tar.gz | cut -d' ' -f1)
+          SHA_LINUX_ARM64=$(sha256sum artifacts/gripe-linux-arm64.tar.gz | cut -d' ' -f1)
+
+          sed -e "s/VERSION/$VERSION/" \
+              -e "s/SHA256_DARWIN_ARM64/$SHA_DARWIN_ARM64/" \
+              -e "s/SHA256_DARWIN_AMD64/$SHA_DARWIN_AMD64/" \
+              -e "s/SHA256_LINUX_AMD64/$SHA_LINUX_AMD64/" \
+              -e "s/SHA256_LINUX_ARM64/$SHA_LINUX_ARM64/" \
+              Formula/gripe.rb > gripe.rb
+
+      - name: Push to Homebrew tap
+        run: |
+          git clone https://x-access-token:${{ secrets.TAP_GITHUB_TOKEN }}@github.com/agent-clis/homebrew-gripe.git tap
+          mkdir -p tap/Formula
+          cp gripe.rb tap/Formula/gripe.rb
+          cd tap
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add Formula/gripe.rb
+          git commit -m "gripe ${GITHUB_REF_NAME}"
+          git push
+
+  npm:
+    needs: release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://registry.npmjs.org
+
+      - name: Publish to npm
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          cd npm
+          node -e "const p=require('./package.json'); p.version='$VERSION'; require('fs').writeFileSync('package.json', JSON.stringify(p,null,2)+'\n')"
+          npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

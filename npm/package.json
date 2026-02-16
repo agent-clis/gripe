@@ -1,0 +1,17 @@
+{
+  "name": "@agent-clis/gripe",
+  "version": "0.0.0",
+  "description": "Submit structured feedback as GitHub issues",
+  "bin": {
+    "gripe": "run.js"
+  },
+  "scripts": {
+    "postinstall": "node install.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/agent-clis/gripe.git"
+  },
+  "license": "MIT",
+  "keywords": ["cli", "github", "issues", "feedback"]
+}

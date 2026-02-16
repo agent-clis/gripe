@@ -6,6 +6,32 @@ Submit structured feedback as GitHub issues from the command line.
 
 ## Install
 
+### Homebrew (macOS/Linux)
+
+```sh
+brew install agent-clis/gripe/gripe
+```
+
+### Shell (macOS/Linux)
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/agent-clis/gripe/main/install.sh | sh
+```
+
+### PowerShell (Windows)
+
+```powershell
+irm https://raw.githubusercontent.com/agent-clis/gripe/main/install.ps1 | iex
+```
+
+### npm
+
+```sh
+npm install -g @agent-clis/gripe
+```
+
+### Cargo (build from source)
+
 ```sh
 cargo install --path .
 ```
